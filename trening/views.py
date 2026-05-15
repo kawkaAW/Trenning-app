@@ -106,7 +106,7 @@ def evaluate_models_view(request):
     except Exception as e:
         return render(request, 'trening/evaluate_models.html', {'error': str(e)})
 
-openai.api_key = "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"
+openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 def fitness_chat_page(request):
     return render(request, "trening/fitness_chat.html")
@@ -114,6 +114,9 @@ def fitness_chat_page(request):
 @csrf_exempt
 def fitness_chat(request):
     if request.method == "POST":
+        if not openai.api_key:
+            return JsonResponse({"error": "Brak konfiguracji OPENAI_API_KEY."}, status=503)
+
         data = json.loads(request.body)
         user_message = data.get("message", "")
 
