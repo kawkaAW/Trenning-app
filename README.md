@@ -66,3 +66,5 @@ This project includes a CI pipeline using GitHub Actions that:
 Security:
 
 Sensitive data should not be pushed to GitHub. The project uses environment variables for secrets like Django secret key and OpenAI API key. Local files like `.env`, `db.sqlite3`, `venv/`, `__pycache__/` and logs are ignored by Git.
+
+[![CI](https://github.com/kawkaAW/Trenning-app/actions/workflows/ci.yml/badge.svg)](https://github.com/kawkaAW/Trenning-app/actions/workflows/ci.yml)
