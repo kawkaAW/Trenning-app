@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wygenerowany Plan Treningowy</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #00796b;
+            color: #fff;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #e0f7fa;
+        }
+    </style>
+</head>
+<body>
+    <h1>Wygenerowany Plan Treningowy</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Typ Treningu</th>
+                <th>Czas Trwania (godz.)</th>
+                <th>Spalone Kalorie</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for session in workout_plan %}
+            <tr>
+                <td>{{ session.date }}</td>
+                <td>
+                    <a href="{% url 'trening:training_details' workout_type=session.workout_type %}">
+                        {{ session.workout_type }}
+                    </a>
+                </td>
+                <td>{{ session.duration }}</td>
+                <td>{{ session.calories }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">Brak danych do wyświetlenia.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</body>
+</html>

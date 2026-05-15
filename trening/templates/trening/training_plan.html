@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twój Plan Treningowy</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(120deg, #89cff0, #add8e6 60%, #b0e0e6);
+            color: #333;
+        }
+
+        .top-menu {
+            background-color: #2c3e50;
+            padding: 10px 20px;
+            text-align: center;
+        }
+
+        .top-menu nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .top-menu nav ul li {
+            margin: 0 15px;
+        }
+
+        .top-menu nav ul li a {
+            text-decoration: none;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .top-menu nav ul li a:hover {
+            color: #1abc9c;
+        }
+
+        .navigation {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .navigation a {
+            text-decoration: none;
+            color: #3498db;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .navigation a:hover {
+            background-color: #87cefa;
+            color: white;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-top: 0;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .day-card {
+            text-align: center;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .day-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .day-card a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .day-card .day-header {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .day-card .training-info {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .training-info {
+            font-size: 0.85rem;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .completed {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .not-completed {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .training-day {
+            background-color: #a8e6a8;
+            color: white;
+            font-weight: bold;
+        }
+
+        .completed-title {
+            text-align: center;
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-top: 20px;
+        }
+
+        .completed-trainings {
+            max-width: 800px;
+            margin: 0 auto 30px;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .completed-trainings table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .completed-trainings th, .completed-trainings td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        .completed-trainings th {
+            background-color: #3498db;
+            color: white;
+        }
+        .completed-trainings tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .completed-trainings tr:hover {
+            background-color: #e0f7fa;
+        }
+
+        .no-data {
+            text-align: center;
+            color: #888;
+            font-size: 1.2rem;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-menu">
+        <nav>
+            <ul>
+                <li><a href="{% url 'trening:dashboard' %}">Główny Panel</a></li>
+                <li><a href="{% url 'trening:training_plan' %}">Plan Treningowy</a></li>
+                <li><a href="{% url 'trening:data_analysis' %}">Analiza Danych</a></li>
+                <li><a href="{% url 'trening:chat' %}">Chat Fitness</a></li>
+                <li><a href="{% url 'trening:goals_and_rewards' %}">Cele i Nagrody</a></li>
+                <li><a href="{% url 'trening:user_data' %}">Dane Użytkownika</a></li>
+                <li><a href="{% url 'trening:logout' %}">Wyloguj</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div style="text-align: center; margin: 20px 0;">
+        <form method="post" action="{% url 'trening:generate_plan' %}">
+            {% csrf_token %}
+            <button type="submit" style="
+                background-color: #1abc9c;
+                color: white;
+                font-size: 1rem;
+                font-weight: bold;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;">
+                Wygeneruj Plan Treningowy
+            </button>
+        </form>
+    </div>
+    <div class="calendar-container">
+        <h1>Twój Plan Treningowy - {{ month_name }} {{ current_year }}</h1>
+    
+        <div class="navigation">
+            <a href="{% url 'trening:training_plan' year=prev_year month=prev_month %}">&laquo; Poprzedni miesiąc</a>
+            <a href="{% url 'trening:training_plan' year=next_year month=next_month %}">Następny miesiąc &raquo;</a>
+        </div>
+    
+        <div class="calendar">
+            {% for day, training in training_list %}
+                <div class="day-card">
+                    <a href="{% url 'trening:training_detail' date=day %}">
+                        <div class="day-header">
+                            <span>{{ day|date:"l" }}</span><br>
+                            <span>{{ day|date:"d.m.Y" }}</span>
+                        </div>
+                        <div class="training-info">
+                            {% if training %}
+                                <strong>{{ training.workout_type }}</strong><br>
+                                {% if training.completed %}
+                                    <span style="color: green;">Odbyty</span>
+                                {% else %}
+                                    <span style="color: red;">Nieodbyty</span>
+                                {% endif %}
+                            {% else %}
+                                Brak treningu
+                            {% endif %}
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    
+
+    <h2 class="completed-title">Odbyte treningi</h2>
+<div class="completed-trainings">
+    <table>
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Trening</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if completed_trainings %}
+                {% for training in completed_trainings %}
+                <tr>
+                    <td>{{ training.session_date|date:"d.m.Y" }}</td>
+                    <td>
+                        <strong>{{ training.workout_type }}</strong><br>
+                        Czas trwania: {{ training.session_duration }} godz.<br>
+                        Kalorie: {{ training.calories_burned|default:"-" }}
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="2" style="text-align: center;">Brak odbytych treningów w tym miesiącu.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

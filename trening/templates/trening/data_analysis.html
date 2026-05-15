@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analiza Danych</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(120deg, #89cff0, #add8e6 60%, #b0e0e6);
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .top-menu {
+            background-color: #2c3e50;
+            padding: 10px 20px;
+            text-align: center;
+        }
+
+        .top-menu nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .top-menu nav ul li {
+            margin: 0 15px;
+        }
+
+        .top-menu nav ul li a {
+            text-decoration: none;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .top-menu nav ul li a:hover {
+            color: #1abc9c;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        .summary-section {
+            max-width: 1200px;
+            margin: 20px auto;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-container {
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+
+        canvas {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .navigation-buttons {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .navigation-buttons a {
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #fff;
+            background: #00796b;
+            border-radius: 5px;
+            margin: 5px;
+            transition: background 0.3s ease;
+        }
+
+        .navigation-buttons a:hover {
+            background: #004d40;
+        }
+        .predictions-section {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f1f1f1;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .predictions-section h2 {
+            text-align: center;
+            color: #00796b;
+        }
+        .predictions-section ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .predictions-section li {
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-menu">
+        <nav>
+            <ul>
+                <li><a href="{% url 'trening:dashboard' %}">Główny Panel</a></li>
+                <li><a href="{% url 'trening:training_plan' %}">Plan Treningowy</a></li>
+                <li><a href="{% url 'trening:data_analysis' %}">Analiza Danych</a></li>
+                <li><a href="{% url 'trening:chat' %}">Chat Fitness</a></li>
+                <li><a href="{% url 'trening:goals_and_rewards' %}">Cele i Nagrody</a></li>
+                <li><a href="{% url 'trening:user_data' %}">Dane Użytkownika</a></li>
+                <li><a href="{% url 'trening:logout' %}">Wyloguj</a></li>
+            </ul>
+        </nav>
+    </div>
+    <h1>Analiza Danych</h1>
+    <div class="navigation-buttons">
+        <a href="?week={{ week_offset|add:"-1" }}">Poprzedni tydzień</a>
+        <a href="?week={{ week_offset|add:"1" }}">Następny tydzień</a>
+    </div>
+
+    
+    <div class="summary-section">
+        <h2>Podsumowanie tygodniowe</h2>
+        <p>Zmiana wagi: {{ weekly_summary.weight_change }} kg</p>
+        <p>Średnie kalorie: {{ weekly_summary.avg_calories }}</p>
+        <p>Średnie nawodnienie: {{ weekly_summary.avg_hydration }} l</p>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="weeklyCaloriesChart"></canvas>
+        <canvas id="weeklyHydrationChart"></canvas>
+        <canvas id="weeklyWeightChart"></canvas>
+    </div>
+
+    <div class="summary-section">
+        <h2>Podsumowanie miesięczne</h2>
+        <p>Zmiana wagi: {{ monthly_summary.weight_change }} kg</p>
+        <p>Średnie kalorie: {{ monthly_summary.avg_calories }}</p>
+        <p>Średnie nawodnienie: {{ monthly_summary.avg_hydration }} l</p>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="monthlyCaloriesChart"></canvas>
+        <canvas id="monthlyHydrationChart"></canvas>
+        <canvas id="monthlyWeightChart"></canvas>
+    </div>
+
+    <script>
+        function createScatterChart(ctxId, labels, data, label, color) {
+            new Chart(document.getElementById(ctxId), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: label,
+                        data: data,
+                        borderColor: color,
+                        backgroundColor: color + '33',
+                        pointStyle: 'circle',
+                        fill: false,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: label
+                        },
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'Data' } },
+                        y: { title: { display: true, text: 'Wartości' } }
+                    }
+                }
+            });
+        }
+    
+        const weeklyData = {{ weekly_chart_data|safe }};
+        createScatterChart('weeklyCaloriesChart', weeklyData.dates, weeklyData.calorie_balance, 'Bilans Kaloryczny', 'rgba(255, 99, 132, 1)');
+        createScatterChart('weeklyHydrationChart', weeklyData.dates, weeklyData.hydration, 'Nawodnienie (l)', 'rgba(54, 162, 235, 1)');
+        createScatterChart('weeklyWeightChart', weeklyData.dates, weeklyData.weight, 'Waga (kg)', 'rgba(75, 192, 192, 1)');
+    
+        const monthlyData = {{ monthly_chart_data|safe }};
+        createScatterChart('monthlyCaloriesChart', monthlyData.dates, monthlyData.calorie_balance, 'Bilans Kaloryczny', 'rgba(255, 159, 64, 1)');
+        createScatterChart('monthlyHydrationChart', monthlyData.dates, monthlyData.hydration, 'Nawodnienie (l)', 'rgba(153, 102, 255, 1)');
+        createScatterChart('monthlyWeightChart', monthlyData.dates, monthlyData.weight, 'Waga (kg)', 'rgba(255, 206, 86, 1)');
+    </script>
+</body>
+</html>

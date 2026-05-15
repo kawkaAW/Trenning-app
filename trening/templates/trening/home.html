@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Train Smart And Hard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        a:hover {
+            color: #0056b3;
+        }
+
+        header {
+            background-color: #222;
+            color: #fff;
+            padding: 15px 20px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        header nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 15px;
+        }
+
+        header nav ul li {
+            display: inline;
+        }
+
+        header nav ul li a {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .main-container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            max-width: 900px;
+            margin: 50px auto;
+        }
+
+        .image-section img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-right: 20px;
+        }
+
+        .text-section {
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .text-section h1 {
+            font-size: 28px;
+            color: #333;
+        }
+
+        .text-section p {
+            font-size: 16px;
+            line-height: 1.5;
+            margin: 20px 0;
+            color: #555;
+        }
+
+        .text-section a {
+            display: inline-block;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            margin: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .text-section a:hover {
+            background-color: #0056b3;
+        }
+
+        footer {
+            background-color: #222;
+            color: #fff;
+            text-align: center;
+            padding: 15px 0;
+            margin-top: 50px;
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>Train Smart And Hard</h1>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'trening:login' %}">Zaloguj</a></li>
+                    <li><a href="{% url 'trening:register' %}">Rejestracja</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div class="image-section">
+            <img src="{% static 'images/gym.png' %}" alt="Mężczyzna na siłowni">
+        </div>
+        <div class="text-section">
+            <h1>Train Smart And Hard</h1>
+            <p>Przełam swoje granice i osiągnij więcej z pomocą naszej aplikacji treningowej.</p>
+            <a href="{% url 'trening:login' %}">Zaloguj się tutaj</a>
+            <a href="{% url 'trening:register' %}">Zarejestruj się tutaj</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 Train Smart And Hard. Wszelkie prawa zastrzeżone.</p>
+    </footer>
+</body>
+</html>

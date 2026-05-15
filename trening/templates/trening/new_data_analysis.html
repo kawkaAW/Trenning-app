@@ -1,0 +1,11 @@
+<h2>Prognozy na podstawie danych z bazy</h2>
+
+<h3>Dzienne prognozowane spożycie kalorii:</h3>
+<ul>
+    {% for calorie in future_predictions.calories %}
+    <li>{{ calorie }} kcal</li>
+    {% endfor %}
+</ul>
+
+<h3>Prognozowana zmiana wagi:</h3>
+<p>{{ future_predictions.weight_change }} kg</p>

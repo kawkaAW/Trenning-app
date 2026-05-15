@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twoje Cele i Nagrody</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(120deg, #89cff0, #add8e6 60%, #b0e0e6);
+            color: #333;
+        }
+        .top-menu {
+            background-color: #2c3e50;
+            padding: 10px 20px;
+            text-align: center;
+        }
+
+        .top-menu nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .top-menu nav ul li {
+            margin: 0 15px;
+        }
+
+        .top-menu nav ul li a {
+            text-decoration: none;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .top-menu nav ul li a:hover {
+            color: #1abc9c;
+        }
+        h1, h2, h3 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        .page-title {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            margin-top: 30px;
+            color: #2c3e50;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .goal-list {
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .goal-item {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            max-width: 600px;
+            text-align: left;
+        }
+
+        .goal-type {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #2c3e50;
+        }
+
+        .goal-progress {
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        .goal-status.completed {
+            color: green;
+            font-weight: bold;
+        }
+
+        .goal-status.in-progress {
+            color: orange;
+            font-weight: bold;
+        }
+
+        .goal-deadline {
+            font-style: italic;
+            color: #777;
+        }
+
+        .no-goals {
+            color: #555;
+            font-style: italic;
+            text-align: center;
+        }
+
+        .form-title {
+            margin-top: 30px;
+            font-size: 1.5em;
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        .goal-form {
+            margin: 20px auto;
+            width: 80%;
+            max-width: 600px;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .form-input, .form-select, .btn-submit {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        .btn-submit {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 10px 20px;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-submit:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+
+        .reward-list {
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .reward-item {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #f0f9ff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            max-width: 600px;
+            text-align: left;
+        }
+
+        .reward-description {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #2c3e50;
+        }
+
+        .reward-points {
+            color: #555;
+        }
+
+        .reward-status.redeemed {
+            color: green;
+            font-weight: bold;
+        }
+
+        .btn-redeem {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .btn-redeem:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+        .no-rewards {
+            color: #555;
+            font-style: italic;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="top-menu">
+        <nav>
+            <ul>
+                <li><a href="{% url 'trening:dashboard' %}">Główny Panel</a></li>
+                <li><a href="{% url 'trening:training_plan' %}">Plan Treningowy</a></li>
+                <li><a href="{% url 'trening:data_analysis' %}">Analiza Danych</a></li>
+                <li><a href="{% url 'trening:chat' %}">Chat Fitness</a></li>
+                <li><a href="{% url 'trening:goals_and_rewards' %}">Cele i Nagrody</a></li>
+                <li><a href="{% url 'trening:user_data' %}">Dane Użytkownika</a></li>
+                <li><a href="{% url 'trening:logout' %}">Wyloguj</a></li>
+            </ul>
+        </nav>
+    </div>
+    <h1 class="page-title">Twoje Cele i Nagrody</h1>
+
+    <h2 class="section-title">Twoje Cele Treningowe</h2>
+<ul class="goal-list">
+    {% for goal in active_goals %}
+        <li class="goal-item">
+            <span class="goal-type">{{ goal.get_goal_type_display }}</span>: 
+            <span class="goal-progress">
+                {{ goal.current_progress }} / {{ goal.target_value }}
+                {% if goal.goal_type == "weight_loss" %} kg {% endif %}
+            </span>
+            <strong class="goal-status in-progress">(W trakcie)</strong>
+            <br>
+            <span class="goal-deadline">Termin: {{ goal.deadline }}</span>
+        </li>
+    {% empty %}
+        <p class="no-goals">Nie masz jeszcze ustawionych celów w trakcie realizacji.</p>
+    {% endfor %}
+</ul>
+    
+<h3 class="form-title">Dodaj Nowy Cel</h3>
+<form method="POST" class="goal-form">
+    {% csrf_token %}
+    <label for="goal_type" class="form-label">Typ celu:</label>
+    <select id="goal_type" name="goal_type" class="form-select">
+        <option value="weight_loss">Zrzucenie wagi</option>
+        <option value="muscle_gain">Budowa masy mięśniowej</option>
+        <option value="endurance">Wytrzymałość</option>
+        <option value="training_completion">Ukończenie treningów</option>
+        <option value="calories_burned">Spalenie kalorii</option> 
+    </select>
+
+    <label for="target_value" class="form-label">Wartość docelowa:</label>
+    <input type="number" step="1" id="target_value" name="target_value" class="form-input" placeholder="np. 20000">
+
+    <label for="deadline" class="form-label">Termin:</label>
+    <input type="date" id="deadline" name="deadline" class="form-input">
+
+    <button type="submit" name="add_goal" class="btn-submit">Dodaj Cel</button>
+</form>
+    
+    <h2 class="section-title">Twoje Nagrody</h2>
+    <ul class="reward-list">
+        {% for reward in rewards %}
+            <li class="reward-item">
+                <span class="reward-description">{{ reward.description }}</span> - 
+                <span class="reward-points">{{ reward.points_required }} pkt</span>
+                {% if reward.is_redeemed %}
+                    <strong class="reward-status redeemed">(Zrealizowana)</strong>
+                {% else %}
+                    <form method="POST" style="display:inline;" class="reward-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="reward_id" value="{{ reward.id }}">
+                        <button type="submit" name="redeem_reward" class="btn-redeem">Zrealizuj</button>
+                    </form>
+                {% endif %}
+            </li>
+        {% empty %}
+            <p class="no-rewards">Nie masz jeszcze żadnych nagród.</p>
+        {% endfor %}
+    </ul>
+</body>
+</html>

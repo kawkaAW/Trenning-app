@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ćwiczenia - {{ workout_type }}</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(120deg, #89cff0, #add8e6 60%, #b0e0e6);
+            color: #333;
+        }
+        .top-menu {
+            background-color: #2c3e50;
+            padding: 10px 20px;
+            text-align: center;
+        }
+
+        .top-menu nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .top-menu nav ul li {
+            margin: 0 15px;
+        }
+
+        .top-menu nav ul li a {
+            text-decoration: none;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .top-menu nav ul li a:hover {
+            color: #1abc9c;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .exercise-container {
+            width: 80%;
+            margin: 20px auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+        }
+        .exercise-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+        .exercise-item h3 {
+            margin: 0;
+            color: #3498db;
+        }
+        .exercise-item p {
+            margin: 5px 0;
+            color: #555;
+        }
+        .no-exercises {
+            text-align: center;
+            color: #888;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-menu">
+        <nav>
+            <ul>
+                <li><a href="{% url 'trening:dashboard' %}">Główny Panel</a></li>
+                <li><a href="{% url 'trening:training_plan' %}">Plan Treningowy</a></li>
+                <li><a href="{% url 'trening:data_analysis' %}">Analiza Danych</a></li>
+                <li><a href="{% url 'trening:chat' %}">Chat Fitness</a></li>
+                <li><a href="{% url 'trening:goals_and_rewards' %}">Cele i Nagrody</a></li>
+                <li><a href="{% url 'trening:user_data' %}">Dane Użytkownika</a></li>
+                <li><a href="{% url 'trening:logout' %}">Wyloguj</a></li>
+            </ul>
+        </nav>
+    </div>
+    <h1>Ćwiczenia - {{ workout_type }}</h1>
+    <div class="exercise-container">
+        {% if exercises %}
+    <p>Ćwiczenia do wyświetlenia:</p>
+    {% for exercise in exercises %}
+        <div class="exercise-item">
+            <h3>{{ exercise.Title }}</h3>
+            <p><strong>Opis:</strong> {{ exercise.Desc }}</p>
+            <p><strong>Część ciała:</strong> {{ exercise.BodyPart }}</p>
+            <p><strong>Sprzęt:</strong> {{ exercise.Equipment }}</p>
+            <p><strong>Poziom:</strong> {{ exercise.Level }}</p>
+        </div>
+    {% endfor %}
+{% else %}
+    <p class="no-data">Brak ćwiczeń do wyświetlenia dla tego treningu.</p>
+    <p>Debug: {{ exercises }}</p>
+{% endif %}
+    </div>
+</body>
+</html>
